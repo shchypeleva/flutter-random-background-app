@@ -10,11 +10,24 @@ void main() {
   runApp(MyApp());
 }
 
-extension RandomColor on Color{
+class RandomColor extends Color {
 
-  Color random(){
-    return Color(Random().nextInt(0xFFFFFFFF));
-  }
+  @override
+  RandomColor({int value = 0}) : super(Random().nextInt(0xFFFFFFFF));
+
+  @override
+  RandomColor.fromRGBO({int r = 0, int g = 0, int b = 0, double opacity = 1.0}) : super.fromRGBO(
+      Random().nextInt(255),
+      Random().nextInt(255),
+      Random().nextInt(255),
+      Random().nextDouble());
+
+  @override
+  RandomColor.fromARGB({int a = 0, int r = 0, int g = 0, int b = 0}) : super.fromARGB(
+    Random().nextInt(255),
+    Random().nextInt(255),
+    Random().nextInt(255),
+    Random().nextInt(255),);
 }
 
 class MyApp extends StatelessWidget {
@@ -40,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Color _color = new Color(1).random();
+  Color _color = new RandomColor();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: GestureDetector(
                   onTap: (){
                     setState(() {
-                      _color = new Color(1).random();
+                      _color = new RandomColor();
                     });
                   },
                   child: Container(
@@ -131,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
               "Copy HEX",
             ),
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: colorToHex(_color)));
+              Clipboard.setData(ClipboardData(text: _color.toHEX()));
               Navigator.of(context).pop();
             },
           ),
@@ -140,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
               "Copy RGB",
             ),
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: colorToRGB(_color)));
+              Clipboard.setData(ClipboardData(text: _color.toRGB()));
               Navigator.of(context).pop();
             },
           ),
@@ -158,12 +171,16 @@ _launchURL(String URL) async {
   }
 }
 
-String colorToHex(Color color) {
-  return  '#${color.value.toRadixString(16).substring(2)}';
+extension ColorToHex on Color {
+  String toHEX() {
+    return '#${this.value.toRadixString(16).substring(2)}';
+  }
 }
 
-String colorToRGB(Color color) {
-  return  '${((((255-(color.alpha)) * (Colors.white.red)) + (color.alpha * color.red))/255).round()} '
-          '${((((255-(color.alpha)) * (Colors.white.green)) + (color.alpha * color.green))/255).round()} '
-          '${((((255-(color.alpha)) * (Colors.white.blue)) + (color.alpha * color.blue))/255).round()}';
+extension ColorToRGB on Color {
+  String toRGB() {
+    return  '${((((255-(this.alpha)) * (Colors.white.red)) + (this.alpha * this.red))/255).round()} '
+        '${((((255-(this.alpha)) * (Colors.white.green)) + (this.alpha * this.green))/255).round()} '
+        '${((((255-(this.alpha)) * (Colors.white.blue)) + (this.alpha * this.blue))/255).round()}';
+  }
 }

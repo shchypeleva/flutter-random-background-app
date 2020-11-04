@@ -7,14 +7,14 @@ void main(){
 
   test('Flutter Color should be converted to HEX String', (){
     Color flutterColor = Colors.white;
-    String HEXColor = colorToHex(flutterColor);
+    String HEXColor = flutterColor.toHEX();
 
     expect(HEXColor, '#ffffff');
   });
 
   test('Flutter Color should be converted to RGB String', (){
     Color flutterColor = Colors.white;
-    String RGBColor = colorToRGB(flutterColor);
+    String RGBColor = flutterColor.toRGB();
 
     expect(RGBColor, '255 255 255');
   });
